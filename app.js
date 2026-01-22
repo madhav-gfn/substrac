@@ -6,6 +6,9 @@ import subscriptionRouter from './Routes/subscription.router.js';
 
 
 const app = express();
+app.use('/api/v1/auth', authrouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/subscriptions', subscriptionRouter);
 app.get('/', (req,res)=>{
     res.send('Welcome to the subscription tracker');
 });
