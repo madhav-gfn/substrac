@@ -4,9 +4,14 @@ import userRouter from './Routes/user.routes.js';
 import authrouter from './Routes/auth.routes.js';
 import subscriptionRouter from './Routes/subscription.router.js';
 import connectToDatabase from './database/mongodb.js';
-
+import errorMiddleware from './Middlewares/error.middleware.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
+app.use(express.json);
+app.use(express.urlencoded(extended=false));
+app.use(cookieParser());
+app.use(errorMiddleware);
 app.use('/api/v1/auth', authrouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/subscriptions', subscriptionRouter);
