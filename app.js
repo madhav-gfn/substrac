@@ -8,8 +8,8 @@ import errorMiddleware from './Middlewares/error.middleware.js';
 import cookieParser from 'cookie-parser';
 
 const app = express();
-app.use(express.json);
-app.use(express.urlencoded(extended=false));
+app.use(express.json());
+app.use(express.urlencoded({extended:false}));
 app.use(cookieParser());
 app.use(errorMiddleware);
 app.use('/api/v1/auth', authrouter);

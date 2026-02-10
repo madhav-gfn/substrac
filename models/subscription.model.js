@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 const CURRENCIES = ['USD', 'EUR', 'GBP', 'INR', 'CAD', 'AUD'];
-const FREQUENCY =['daily', 'weekly', ' monthly', 'quaterly', 'yearly']
+const FREQUENCY =['daily', 'weekly', 'monthly', 'quarterly', 'yearly']
 const CATEGORIES = [
     'streaming', 
     'software', 
@@ -24,8 +24,8 @@ const subscriptionSchema = new mongoose.Schema({
         type: String,
         required: [true, 'subscription name required'],
         trim: true,
-        MinLength:2,
-        MaxLength:23
+        minLength:2,
+        maxLength:23
         
     },
     price:{
@@ -39,11 +39,11 @@ const subscriptionSchema = new mongoose.Schema({
         default:'INR'
     },
     frequency:{
-        type:Number,
+        type:String,
         enum: FREQUENCY
 
     },
-    catagory:{
+    category:{
         type: String,
         required:true,
         enum: CATEGORIES
@@ -60,22 +60,22 @@ const subscriptionSchema = new mongoose.Schema({
         default: 'active'
     },
     startDate:{
-        type: Date,
-        required:true,
-        validate:{ 
-            validator:(value)=>new Date(),
-            message: 'start date future mai kaise hai?'
-
+    type: Date,
+    required:true,
+    validate:{ 
+        validator: function(value) {
+            return value <= new Date();
+        },
+        message: 'start date future mai kaise hai?'
         }
     },
     renewalDate: {
-        type: Date,
-        validate:{ 
-            validator: function(value){
-                return value =>this.startDate;
-            },
-            message: 'start date ke baad ki renewal date daal'
-
+    type: Date,
+    validate:{ 
+        validator: function(value){
+            return value >= this.startDate;
+        },
+        message: 'start date ke baad ki renewal date daal'
         }
     },
     user:{
@@ -107,3 +107,6 @@ subscriptionSchema.pre('save', function (next) {
 
   next();
 });
+const Subscription = mongoose.model('Subscription', subscriptionSchema);
+export default Subscription;
+
